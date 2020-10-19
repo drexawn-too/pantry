@@ -8,8 +8,8 @@ const App = () => {
   const [items, updateItems] = useState([]);
 
   useEffect(() => {
-    const itemsConnection = connectItems(updateItems);
-    return () => itemsConnection();
+    const connection = connectItems(updateItems);
+    return () => connection();
   }, []);
 
   const handleInput = (event) => {
@@ -34,7 +34,8 @@ const App = () => {
       </form>
       <ul>
         {_map(items, (item) =>
-          (<li key={item.id}>{`${item.value}\n`}<span onClick={() => handleRemove(item.id)}>x</span></li>))}
+          (<li key={item.id}>{`${item.value}\n`}<span onClick={() => handleRemove(item.id)}>x</span></li>)
+        )}
       </ul>
     </div>
   );
