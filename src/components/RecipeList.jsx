@@ -1,8 +1,9 @@
 import _map from 'lodash/map';
 import React, { useState, useEffect, useContext } from 'react';
 import { connectRecipes, createRecipe, deleteRecipe } from '../firebase';
-import '../App.css';
 import { UserContext } from '../UserProvider';
+
+import '../App.css';
 
 const RecipeList = () => {
   const { user, signOut } = useContext(UserContext);
@@ -11,9 +12,10 @@ const RecipeList = () => {
   const [recipesList, updateRecipes] = useState([]);
 
   useEffect(() => {
-    const unsubscribe = connectRecipes(updateRecipes);
+    const { uid } = user;
+    const unsubscribe = connectRecipes(uid, updateRecipes);
     return () => unsubscribe();
-  }, []);
+  }, [user]);
 
   const handleInput = (event) => {
     updateInput(event.target.value);
@@ -33,6 +35,7 @@ const RecipeList = () => {
 
   return (
     <div>
+      <h1>{`Hi ${user.displayName}`}</h1>
       <form onSubmit={handleSubmit}>
         <input type="text" value={input} onChange={handleInput} />
         <button type="submit">Submit</button>

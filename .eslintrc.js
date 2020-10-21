@@ -18,6 +18,7 @@ module.exports = {
     'react',
   ],
   rules: {
+    // TODO: temporary
     'linebreak-style': ['off'],
   },
 };

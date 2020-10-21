@@ -17,19 +17,22 @@ firebase.initializeApp(firebaseConfig);
 export const AUTH = firebase.auth();
 export const FIRESTORE = firebase.firestore();
 
-const googleProvider = new firebase.auth.GoogleAuthProvider();
-export const signInWithGoogle = () => AUTH.signInWithPopup(googleProvider);
+export const signInWithGoogle = () => AUTH.signInWithPopup(new firebase.auth.GoogleAuthProvider());
 export const signOut = () => AUTH.signOut();
 
 export const RECIPES_REF = FIRESTORE.collection('recipes');
 
-export const connectRecipes = (callback) => RECIPES_REF.onSnapshot((snapshot) => {
-  const recipeCollection = snapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
-  callback(recipeCollection);
-});
+export const connectRecipes = (userId, callback) => RECIPES_REF
+  .where('author_id', '==', userId)
+  // TODO re-enable when composite key is created
+  // .orderBy('created_at')
+  .onSnapshot((snapshot) => {
+    const recipeCollection = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    callback(recipeCollection);
+  });
 
 export const createRecipe = (value, authorId) => {
   const newRecipe = {
