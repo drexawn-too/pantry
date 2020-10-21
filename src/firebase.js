@@ -1,29 +1,46 @@
-import uuidv4 from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+import 'firebase/auth';
 
-// initialize Firebase
-firebase.initializeApp({ projectId: 'pant-ry' });
+const firebaseConfig = {
+  apiKey: 'AIzaSyCwFaq64eue1E3EtBvS5cj-5wlE7UmsotY',
+  authDomain: 'pant-ry.firebaseapp.com',
+  databaseURL: 'https://pant-ry.firebaseio.com',
+  projectId: 'pant-ry',
+  storageBucket: 'pant-ry.appspot.com',
+  messagingSenderId: '653562734879',
+  appId: '1:653562734879:web:90fdd22c96aa1968f8282a',
+};
+firebase.initializeApp(firebaseConfig);
 
+export const AUTH = firebase.auth();
 export const FIRESTORE = firebase.firestore();
 
-export const connectItems = (callback) => FIRESTORE.collection('items').onSnapshot(snapshot => {
-  const itemsCollection = snapshot.docs.map(doc => ({
+const googleProvider = new firebase.auth.GoogleAuthProvider();
+export const signInWithGoogle = () => AUTH.signInWithPopup(googleProvider);
+export const signOut = () => AUTH.signOut();
+
+export const RECIPES_REF = FIRESTORE.collection('recipes');
+
+export const connectRecipes = (callback) => RECIPES_REF.onSnapshot((snapshot) => {
+  const recipeCollection = snapshot.docs.map((doc) => ({
     id: doc.id,
-    ...doc.data()
+    ...doc.data(),
   }));
-  callback(itemsCollection);
+  callback(recipeCollection);
 });
 
-export const createItem = (value) => {
-  const newItem = {
+export const createRecipe = (value, authorId) => {
+  const newRecipe = {
     id: uuidv4(),
-    created_at: Date.now(),
+    created_at: firebase.firestore.FieldValue.serverTimestamp(),
+    author_id: authorId,
     value,
   };
-  FIRESTORE.doc(`items/${newItem.id}`).set(newItem);
-}
+  RECIPES_REF.doc(newRecipe.id).set(newRecipe);
+};
 
-export const removeItem = (id) => {
-  FIRESTORE.doc(`items/${id}`).delete();
-}
+export const deleteRecipe = (id) => {
+  RECIPES_REF.doc(id).delete();
+};
