@@ -3,8 +3,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import { connectRecipes, createRecipe, deleteRecipe } from '../firebase';
 import { UserContext } from '../UserProvider';
 
-import '../App.css';
-
 const RecipeList = () => {
   const { user, signOut } = useContext(UserContext);
 
