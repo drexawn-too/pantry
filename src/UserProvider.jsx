@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
-import { AUTH, signInWithGoogle, signOut } from './firebase';
+import { user$, signInWithGoogle, signOut } from './firebase';
 
 export const UserContext = React.createContext();
 
@@ -8,9 +8,8 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    AUTH.onAuthStateChanged((u) => {
-      setUser(u);
-    });
+    const sub = user$.subscribe((user) => setUser(user));
+    return () => sub.unsubscribe();
   }, []);
 
   return (

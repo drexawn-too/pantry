@@ -12,6 +12,8 @@
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-scripts": "3.4.3",
+    "rxfire": "^3.13.5",
+    "rxjs": "^6.6.3",
     "uuid": "^8.3.1"
   },
   "scripts": {

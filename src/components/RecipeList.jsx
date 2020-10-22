@@ -1,19 +1,18 @@
 import _map from 'lodash/map';
 import React, { useState, useEffect, useContext } from 'react';
-import { connectRecipes, createRecipe, deleteRecipe } from '../firebase';
+import { recipeCollection$, createRecipe, deleteRecipe } from '../firebase';
 import { UserContext } from '../UserProvider';
 
 const RecipeList = () => {
   const { user, signOut } = useContext(UserContext);
 
   const [input, updateInput] = useState('');
-  const [recipesList, updateRecipes] = useState([]);
+  const [recipeList, updateRecipes] = useState([]);
 
   useEffect(() => {
-    const { uid } = user;
-    const unsubscribe = connectRecipes(uid, updateRecipes);
-    return () => unsubscribe();
-  }, [user]);
+    const sub = recipeCollection$.subscribe((recipeCollection) => updateRecipes(recipeCollection));
+    return () => sub.unsubscribe();
+  }, []);
 
   const handleInput = (event) => {
     updateInput(event.target.value);
@@ -25,9 +24,7 @@ const RecipeList = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    const { uid } = user;
-    createRecipe(input, uid);
+    createRecipe(input);
     updateInput('');
   };
 
@@ -39,7 +36,7 @@ const RecipeList = () => {
         <button type="submit">Submit</button>
       </form>
       <ul>
-        {_map(recipesList, (recipe) => (
+        {_map(recipeList, (recipe) => (
           <li key={recipe.id}>
             <span style={{ display: 'inline' }}>
               {`${recipe.value}`}

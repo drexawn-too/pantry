@@ -1,8 +1,13 @@
+import _get from 'lodash/get';
 import { v4 as uuidv4 } from 'uuid';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
+import { collectionData } from 'rxfire/firestore';
+import { authState } from 'rxfire/auth';
+import { switchMap, filter } from 'rxjs/operators';
 
+// initializtion
 const firebaseConfig = {
   apiKey: 'AIzaSyCwFaq64eue1E3EtBvS5cj-5wlE7UmsotY',
   authDomain: 'pant-ry.firebaseapp.com',
@@ -14,36 +19,35 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 
-export const AUTH = firebase.auth();
-export const FIRESTORE = firebase.firestore();
+const auth = firebase.auth();
+const firestore = firebase.firestore();
+const recipesRef = firestore.collection('recipes');
 
-export const signInWithGoogle = () => AUTH.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-export const signOut = () => AUTH.signOut();
+// authentication
+export const user$ = authState(auth);
+export const signInWithGoogle = () => auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+export const signOut = () => auth.signOut();
 
-export const RECIPES_REF = FIRESTORE.collection('recipes');
+// firestore
+export const recipeCollection$ = user$.pipe(
+  filter((user) => user !== null),
+  switchMap((user) => collectionData(recipesRef.where('author_id', '==', user.uid).orderBy('created_at')))
+);
 
-export const connectRecipes = (userId, callback) => RECIPES_REF
-  .where('author_id', '==', userId)
-  // TODO re-enable when composite key is created
-  // .orderBy('created_at')
-  .onSnapshot((snapshot) => {
-    const recipeCollection = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    callback(recipeCollection);
-  });
-
-export const createRecipe = (value, authorId) => {
+export const createRecipe = (value) => {
+  const userId = _get(auth.currentUser, 'uid');
+  if (!userId) {
+    throw new Error('User must be signed in');
+  }
   const newRecipe = {
     id: uuidv4(),
     created_at: firebase.firestore.FieldValue.serverTimestamp(),
-    author_id: authorId,
+    author_id: userId,
     value,
   };
-  RECIPES_REF.doc(newRecipe.id).set(newRecipe);
+  recipesRef.doc(newRecipe.id).set(newRecipe);
 };
 
 export const deleteRecipe = (id) => {
-  RECIPES_REF.doc(id).delete();
+  recipesRef.doc(id).delete();
 };
