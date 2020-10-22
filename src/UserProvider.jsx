@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
-import { user$, signInWithGoogle, signOut } from './firebase';
+import { user$ } from './firebase';
 
 export const UserContext = React.createContext();
 
@@ -13,7 +13,7 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, signInWithGoogle, signOut }}>
+    <UserContext.Provider value={{ user }}>
       {children}
     </UserContext.Provider>
   );

@@ -29,7 +29,7 @@ export const signOut = () => auth.signOut();
 // firestore
 export const recipeCollection$ = user$.pipe(
   filter((user) => user !== null),
-  switchMap((user) => collectionData(recipesRef.where('author_id', '==', user.uid).orderBy('created_at')))
+  switchMap((user) => collectionData(recipesRef.where('authorId', '==', user.uid).orderBy('createdAt')))
 );
 
 export const createRecipe = (value) => {
@@ -39,8 +39,8 @@ export const createRecipe = (value) => {
   }
   const newRecipe = {
     id: uuidv4(),
-    created_at: firebase.firestore.FieldValue.serverTimestamp(),
-    author_id: userId,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    authorId: userId,
     value,
   };
   recipesRef.doc(newRecipe.id).set(newRecipe);

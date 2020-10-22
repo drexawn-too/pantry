@@ -1,10 +1,10 @@
 import _map from 'lodash/map';
 import React, { useState, useEffect, useContext } from 'react';
-import { recipeCollection$, createRecipe, deleteRecipe } from '../firebase';
+import { recipeCollection$, createRecipe, deleteRecipe, signOut } from '../firebase';
 import { UserContext } from '../UserProvider';
 
 const RecipeList = () => {
-  const { user, signOut } = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   const [input, updateInput] = useState('');
   const [recipeList, updateRecipes] = useState([]);
