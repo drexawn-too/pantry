@@ -33,10 +33,7 @@ export const recipeCollection$ = user$.pipe(
 );
 
 export const createRecipe = (value) => {
-  const userId = _get(auth.currentUser, 'uid');
-  if (!userId) {
-    throw new Error('User must be signed in');
-  }
+  validateUserSignedIn();
   const newRecipe = {
     id: uuidv4(),
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -47,9 +44,14 @@ export const createRecipe = (value) => {
 };
 
 export const deleteRecipe = (id) => {
+  validateUserSignedIn();
+  recipesRef.doc(id).delete();
+};
+
+const validateUserSignedIn = () => {
   const userId = _get(auth.currentUser, 'uid');
   if (!userId) {
     throw new Error('User must be signed in');
   }
-  recipesRef.doc(id).delete();
-};
+  return userId;
+}
