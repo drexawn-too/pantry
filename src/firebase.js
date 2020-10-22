@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
-import { switchMap, filter } from 'rxjs/operators';
+import { switchMap, filter, shareReplay } from 'rxjs/operators';
 import { collectionData } from 'rxfire/firestore';
 import { authState } from 'rxfire/auth';
 
@@ -22,7 +22,7 @@ const firestore = firebase.firestore();
 const recipesRef = firestore.collection('recipes');
 
 // authentication
-export const user$ = authState(auth);
+export const user$ = authState(auth).pipe(shareReplay(1));
 export const signInWithGoogle = () => auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
 export const signOut = () => auth.signOut();
 
@@ -33,7 +33,7 @@ export const recipeCollection$ = user$.pipe(
 );
 
 export const createRecipe = (value) => {
-  validateUserSignedIn();
+  const userId = validateUserSignedIn();
   const newRecipe = {
     id: uuidv4(),
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
