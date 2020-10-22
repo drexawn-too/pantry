@@ -3,12 +3,12 @@ import { v4 as uuidv4 } from 'uuid';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
+import { switchMap, filter } from 'rxjs/operators';
 import { collectionData } from 'rxfire/firestore';
 import { authState } from 'rxfire/auth';
-import { switchMap, filter } from 'rxjs/operators';
 
 // initializtion
-const firebaseConfig = {
+firebase.initializeApp({
   apiKey: 'AIzaSyCwFaq64eue1E3EtBvS5cj-5wlE7UmsotY',
   authDomain: 'pant-ry.firebaseapp.com',
   databaseURL: 'https://pant-ry.firebaseio.com',
@@ -16,9 +16,7 @@ const firebaseConfig = {
   storageBucket: 'pant-ry.appspot.com',
   messagingSenderId: '653562734879',
   appId: '1:653562734879:web:90fdd22c96aa1968f8282a',
-};
-firebase.initializeApp(firebaseConfig);
-
+});
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 const recipesRef = firestore.collection('recipes');
@@ -49,5 +47,9 @@ export const createRecipe = (value) => {
 };
 
 export const deleteRecipe = (id) => {
+  const userId = _get(auth.currentUser, 'uid');
+  if (!userId) {
+    throw new Error('User must be signed in');
+  }
   recipesRef.doc(id).delete();
 };
