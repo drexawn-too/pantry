@@ -10,7 +10,7 @@ const RecipeList = () => {
   const [recipeList, updateRecipes] = useState([]);
 
   useEffect(() => {
-    const sub = recipeCollection$.subscribe((recipeCollection) => updateRecipes(recipeCollection));
+    const sub = recipeCollection$.subscribe((collection) => updateRecipes(collection));
     return () => sub.unsubscribe();
   }, []);
 
