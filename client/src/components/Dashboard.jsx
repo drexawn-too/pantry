@@ -3,9 +3,9 @@ import React from 'react';
 const Dashboard = () => {
   return (
     <div>
-        {'sup'}
+      {'sup'}
     </div>
   );
-};
+}
 
 export default Dashboard;

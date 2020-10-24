@@ -26,6 +26,6 @@ const RecipeList = () => {
       ))}
     </ul>
   );
-};
+}
 
 export default RecipeList;
