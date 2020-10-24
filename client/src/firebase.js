@@ -19,7 +19,7 @@ firebase.initializeApp({
 });
 const auth = firebase.auth();
 const firestore = firebase.firestore();
-const recipesRef = firestore.collection('recipes');
+const recipesCollectionRef = firestore.collection('recipes');
 
 // authentication
 export const user$ = authState(auth).pipe(shareReplay(1));
@@ -29,7 +29,7 @@ export const signOut = () => auth.signOut();
 // firestore
 export const recipeCollection$ = user$.pipe(
   filter((user) => user !== null),
-  switchMap((user) => collectionData(recipesRef.where('authorId', '==', user.uid).orderBy('createdAt')))
+  switchMap((user) => collectionData(recipesCollectionRef.where('authorId', '==', user.uid).orderBy('createdAt')))
 );
 
 export const createRecipe = (value) => {
@@ -40,12 +40,12 @@ export const createRecipe = (value) => {
     authorId: userId,
     value,
   };
-  recipesRef.doc(newRecipe.id).set(newRecipe);
+  recipesCollectionRef.doc(newRecipe.id).set(newRecipe);
 };
 
 export const deleteRecipe = (id) => {
   validateUserSignedIn();
-  recipesRef.doc(id).delete();
+  recipesCollectionRef.doc(id).delete();
 };
 
 const validateUserSignedIn = () => {

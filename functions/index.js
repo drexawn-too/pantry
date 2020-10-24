@@ -3,6 +3,9 @@ const admin = require('firebase-admin');
 
 admin.initializeApp();
 
+const usersCollectionRef = admin.firestore().collection('users');
+
+// create user document when user is created
 exports.createUserDocument = functions.auth.user().onCreate((user) => {
   const newUser = {
     id: user.uid,
@@ -10,5 +13,10 @@ exports.createUserDocument = functions.auth.user().onCreate((user) => {
     name: user.displayName,
     profilePicture: user.photoURL,
   };
-  return admin.firestore().collection('users').doc(`${user.uid}`).set(newUser);
+  return usersCollectionRef.doc(`${user.uid}`).set(newUser);
+});
+
+// delete user document when user is deleted
+exports.deleteUserDocument = functions.auth.user().onDelete((user) => {
+  return usersCollectionRef.doc(`${user.uid}`).delete();
 });
