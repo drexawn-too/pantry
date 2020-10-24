@@ -1,4 +1,3 @@
-import _map from 'lodash/map';
 import React, { useState } from 'react';
 import { createRecipe } from '../firebase';
 

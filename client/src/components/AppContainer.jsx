@@ -26,18 +26,15 @@ const AppContainer = () => {
         <Link to={'/create'}>Create New</Link>
       </div>
       <div>
-        <Link to={'/'}>View List</Link>
+        <Link to={'/recipes'}>View Recipes</Link>
       </div>
       <div>
         <Switch>
-          <Route exact path='/'>
+          <Route exact path='/recipes'>
             <RecipeList />
           </Route>
           <Route exact path='/create'>
             <CreateRecipe />
-          </Route>
-          <Route exact path='/signIn'>
-            <SignInPage />
           </Route>
         </Switch>
       </div>
