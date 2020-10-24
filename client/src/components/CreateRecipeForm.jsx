@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createRecipe } from '../firebase';
 
-const CreateRecipe = () => {
+const CreateRecipeForm = () => {
   const [input, updateInput] = useState('');
 
   const handleInput = (event) => {
@@ -22,4 +22,4 @@ const CreateRecipe = () => {
   );
 };
 
-export default CreateRecipe;
+export default CreateRecipeForm;

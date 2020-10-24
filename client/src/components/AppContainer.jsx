@@ -1,6 +1,6 @@
+import _get from 'lodash/get';
 import React, { useContext } from 'react';
 import {
-  BrowserRouter as Router,
   Switch,
   Route,
   Link
@@ -8,20 +8,20 @@ import {
 
 import { UserContext } from '../UserProvider';
 import { signOut } from '../firebase';
-import CreateRecipe from './CreateRecipe';
+import CreateRecipeForm from './CreateRecipeForm';
 import RecipeList from './RecipeList';
 import SignInPage from './SignInPage';
+import Dashboard from './Dashboard';
 
 const AppContainer = () => {
   const { user } = useContext(UserContext);
 
-  if (!user) {
-    return <SignInPage />;
-  }
-
-  return (
-    <Router>
-      <h1>{`Hi ${user.displayName}`}</h1>
+  const content = (
+    <div>
+      <h1>{`Hi ${_get(user, 'displayName', '')}`}</h1>
+      <div>
+        <Link to={'/'}>Home</Link>
+      </div>
       <div>
         <Link to={'/create'}>Create New</Link>
       </div>
@@ -30,17 +30,22 @@ const AppContainer = () => {
       </div>
       <div>
         <Switch>
+          <Route exact path='/'>
+            <Dashboard />
+          </Route>
           <Route exact path='/recipes'>
             <RecipeList />
           </Route>
           <Route exact path='/create'>
-            <CreateRecipe />
+            <CreateRecipeForm />
           </Route>
         </Switch>
       </div>
       <button type='button' onClick={signOut}>Sign Out</button>
-    </Router>
+    </div>
   );
+
+  return user ? content : <SignInPage />;
 };
 
 export default AppContainer;
