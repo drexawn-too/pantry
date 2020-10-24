@@ -20,7 +20,7 @@ const AppContainer = () => {
     <div>
       <h1>{`Hi ${_get(user, 'displayName', '')}`}</h1>
       <div>
-        <Link to={'/'}>Home</Link>
+        <Link to={'/home'}>Home</Link>
       </div>
       <div>
         <Link to={'/create'}>Create New</Link>
@@ -30,14 +30,14 @@ const AppContainer = () => {
       </div>
       <div>
         <Switch>
-          <Route exact path='/'>
-            <Dashboard />
-          </Route>
-          <Route exact path='/recipes'>
+          <Route exact path={'/recipes'}>
             <RecipeList />
           </Route>
-          <Route exact path='/create'>
+          <Route exact path={'/create'}>
             <CreateRecipeForm />
+          </Route>
+          <Route>
+            <Dashboard />
           </Route>
         </Switch>
       </div>
