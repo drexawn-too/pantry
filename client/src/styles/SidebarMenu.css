@@ -1,0 +1,27 @@
+.sidebar {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    height: 100%;
+}
+
+.sidebar-nav {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+}
+
+.nav-item {
+    margin: 0.5em 0;
+}
+
+.nav-item:last-child {
+    margin-top: auto;
+}
+
+.signOutButton {
+    margin: 1em;
+}

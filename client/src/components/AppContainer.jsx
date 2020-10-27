@@ -5,11 +5,13 @@ import SignInPage from './SignInPage';
 import SidebarMenu from './SidebarMenu';
 import MainContent from './MainContent';
 
+import '../styles/AppContainer.css'
+
 const AppContainer = () => {
   const { user } = useContext(UserContext);
   
   const content = (
-    <div>
+    <div className='container'>
       <SidebarMenu username={_get(user, 'displayName', '')} />
       <MainContent />
     </div>
